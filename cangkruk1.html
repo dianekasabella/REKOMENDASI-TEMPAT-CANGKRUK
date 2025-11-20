@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rekomendasi Tempat Cangkruk Romantis Jatim 💕</title>
+<style>
+  body { font-family: 'Poppins', sans-serif; background:#fff9f5; color:#333; margin:0; padding:0;}
+  header { background: linear-gradient(135deg,#e57373,#d84315); color:white; text-align:center; padding:2rem 1rem;}
+  header h1 { margin:0 0 .5rem 0; font-size:2rem;}
+  header p { margin:0; opacity:.9; }
+  form { max-width:650px; margin:30px auto; padding:25px 30px; background:white; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,.1);}
+  input, select, button { width:100%; padding:10px; margin-bottom:15px; border-radius:6px; border:1px solid #ccc; font-size:14px;}
+  button { background:#d84315; color:white; border:none; cursor:pointer; transition:.3s;}
+  button:hover { background:#b71c1c; transform:scale(1.03);}
+  .results { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:20px; max-width:1100px; margin:30px auto; padding:10px;}
+  .card { background:white; border-radius:10px; overflow:hidden; box-shadow:0 4px 10px rgba(0,0,0,.1); transition:.3s; cursor:pointer;}
+  .card:hover { transform:translateY(-5px); box-shadow:0 8px 20px rgba(0,0,0,.2);}
+  .card img { width:100%; height:180px; object-fit:cover;}
+  .card-content { padding:15px;}
+  .card-content h3 { color:#d84315; margin:0 0 8px 0;}
+  .card-content p { margin:4px 0; font-size:14px;}
+  .map-btn { background:#e57373; color:white; border:none; padding:8px 12px; border-radius:6px; font-size:13px; cursor:pointer; margin-top:10px;}
+  .map-btn:hover { background:#d84315;}
+  footer { background:#e57373; color:white; text-align:center; padding:15px; font-size:14px; margin-top:40px;}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🌹 Tempat Cangkruk Romantis di Jawa Timur 🌹</h1>
+  <p>Cari tempat cozy, rooftop, tepi pantai, atau dinner romantis</p>
+</header>
+
+<form id="searchForm">
+  <input type="text" id="city" placeholder="Ketik Kota (Malang, Surabaya, Tuban...)" required>
+  <select id="vibe">
+    <option value="cozy">Cozy & Nyaman</option>
+    <option value="pantai">Tepi Pantai / Sunset</option>
+    <option value="romantis">Dinner Romantis</option>
+    <option value="view">View Pegunungan / Alam</option>
+  </select>
+  <button type="submit">Cari Rekomendasi 💖</button>
+</form>
+
+<div class="results" id="results"></div>
+
+<footer>
+  ✨ Dibuat oleh ChatGPT — Eksplor Romantisme Jawa Timur © 2025 ✨
+</footer>
+
+<script>
+// Data tempat romantis Jatim (contoh lebih banyak bisa ditambah)
+const tempatData = [
+  {nama:"Sky 36 Rooftop Cafe", kota:"surabaya", vibe:"romantis", lokasi:"Jl. Sumatera No.36, Surabaya", img:"https://cdn.idntimes.com/content-images/post/20190523/sky-36-surabaya-1-147a0c2f731c55a8434b70ebf7b75efb_600x400.jpg", maps:"https://maps.google.com/?q=Sky+36+Rooftop+Surabaya"},
+  {nama:"Onni House", kota:"surabaya", vibe:"cozy", lokasi:"Jl. Opak No.45, Surabaya", img:"https://www.javatravel.net/wp-content/uploads/2021/12/Onni-House-Surabaya.jpg", maps:"https://maps.google.com/?q=Onni+House+Surabaya"},
+  {nama:"Pupuk Bawang Cafe & Dining", kota:"malang", vibe:"romantis", lokasi:"Jl. Panglima Sudirman No.116, Batu", img:"https://asset.kompas.com/crops/7hYqFlTgcmE_0pY7Zrq0t9eRGr8=/0x0:1000x667/750x500/data/photo/2022/06/15/62a98a9e1a095.jpg", maps:"https://maps.google.com/?q=Pupuk+Bawang+Cafe+Batu"},
+  {nama:"Latar Ijen Cafe", kota:"malang", vibe:"cozy", lokasi:"Jl. Ijen No.79, Malang", img:"https://www.liputan6.com/images/6137766/original/068261400_1679551661-WhatsApp_Image_2023-03-23_at_12.26.54.jpeg", maps:"https://maps.google.com/?q=Latar+Ijen+Cafe+Malang"},
+  {nama:"HRP Ocean View", kota:"tuban", vibe:"pantai", lokasi:"Kepoh, Panyuran, Palang, Tuban", img:"https://wartaku.id/wp-content/uploads/2022/05/Ramaikan-Kuliner-Tuban-Cafe-HRP-Manjakan-Customer-Dengan-Ocean-View-dan-Sunset.jpg", maps:"https://maps.google.com/?q=HRP+Ocean+View+Tuban"},
+  {nama:"D’Sultan Cafe", kota:"tuban", vibe:"romantis", lokasi:"Jl. Basuki Rachmad No.282, Tuban", img:"https://tugujatim.id/wp-content/uploads/2024/12/cafe_tuban.jpg", maps:"https://maps.google.com/?q=D’Sultan+Cafe+Tuban"},
+  {nama:"Café Bukit Delight", kota:"malang", vibe:"view", lokasi:"Jl. Raya Pujon, Malang", img:"https://example.com/cafe-bukit-delight.jpg", maps:"https://maps.google.com/?q=Cafe+Bukit+Delight+Malang"},
+  {nama:"Kedai Seruni", kota:"jember", vibe:"cozy", lokasi:"Jl. Gajah Mada No.12, Jember", img:"https://example.com/kedai-seruni.jpg", maps:"https://maps.google.com/?q=Kedai+Seruni+Jember"},
+  {nama:"Alinea Kediri", kota:"kediri", vibe:"romantis", lokasi:"Jl. Brawijaya No.22, Kediri", img:"https://example.com/alinea-kediri.jpg", maps:"https://maps.google.com/?q=Alinea+Kediri"},
+  {nama:"Bromo Hillside Sky Dining", kota:"malang", vibe:"view", lokasi:"Bromo Area, Malang", img:"https://example.com/bromo-hillside.jpg", maps:"https://maps.google.com/?q=Bromo+Hillside+Sky+Dining"}
+];
+
+document.getElementById("searchForm").addEventListener("submit", function(e){
+  e.preventDefault();
+  const city = document.getElementById("city").value.toLowerCase().trim();
+  const vibe = document.getElementById("vibe").value;
+  const resultsDiv = document.getElementById("results");
+  resultsDiv.innerHTML = "";
+
+  const filtered = tempatData.filter(t => t.kota.includes(city) && (t.vibe===vibe || vibe==="cozy" || vibe==="romantis" || vibe==="view"));
+  
+  if(filtered.length>0){
+    filtered.forEach(t=>{
+      const card = `
+        <div class="card">
+          <img src="${t.img}" alt="${t.nama}">
+          <div class="card-content">
+            <h3>${t.nama}</h3>
+            <p><strong>Lokasi:</strong> ${t.lokasi}</p>
+            <p><strong>Suasana:</strong> ${t.vibe}</p>
+            <button class="map-btn" onclick="window.open('${t.maps}','_blank')">📍 Lihat di Maps</button>
+          </div>
+        </div>
+      `;
+      resultsDiv.innerHTML += card;
+    });
+  } else {
+    resultsDiv.innerHTML = "<p style='text-align:center'>🙁 Tidak ada rekomendasi untuk kota/suasana ini. Coba kota lain seperti Malang, Surabaya, Tuban, Jember, Kediri.</p>";
+  }
+});
+</script>
+
+</body>
+</html>
